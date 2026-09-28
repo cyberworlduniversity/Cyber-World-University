@@ -1,35 +1,3 @@
-document.addEventListener("DOMContentLoaded",()=>{
-  const button=document.querySelector("[data-enroll]");
-  const message=document.querySelector("[data-enroll-message]");
-  if(!button)return;
-
-  const show=(text,type="info")=>{
-    if(message){message.hidden=false;message.className="form-message "+type;message.textContent=text;}
-  };
-
-  button.addEventListener("click",async()=>{
-    button.disabled=true;
-    try{
-      const session=await fetch("/api/auth/me",{credentials:"same-origin"});
-      if(!session.ok){location.href="login.html";return;}
-
-      const response=await fetch("/api/student/enrollments",{
-        method:"POST",
-        credentials:"same-origin",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
-          courseId:"ethical-hacking-fundamentals",
-          courseTitle:"Ethical Hacking Fundamentals"
-        })
-      });
-      const data=await response.json();
-      if(!response.ok)throw new Error(data.error||"Unable to enroll");
-
-      show(data.message||"Enrollment successful.","success");
-      button.textContent="Enrolled ✓";
-    }catch(error){
-      show(error.message,"error");
-      button.disabled=false;
-    }
-  });
-});
+let COURSE_ID=new URLSearchParams(location.search).get("id")||"";
+function show(text,type="info"){const e=document.querySelector("[data-enroll-message]");if(e){e.hidden=false;e.className="form-message "+type;e.textContent=text}}
+document.addEventListener("DOMContentLoaded",async()=>{const button=document.querySelector("[data-enroll]");if(!button)return;if(!COURSE_ID){show("Course ID is missing.","error");button.disabled=true;return}try{const r=await fetch("/api/courses?id="+encodeURIComponent(COURSE_ID));const d=await r.json();if(!r.ok||!d.courses?.[0])throw Error("Course not found");const c=d.courses[0];document.title=c.title+" | CWU";document.querySelector("[data-course-title]").textContent=c.title;document.querySelector("[data-course-description]").textContent=c.description||"";document.querySelector("[data-course-category]").textContent=c.category||"Cybersecurity";document.querySelector("[data-course-level]").textContent=c.level||"Beginner";document.querySelector("[data-course-duration]").textContent=c.duration||"Self-paced";document.querySelector("[data-course-instructor]").textContent=c.instructor||"Cyber World University";document.querySelector("[data-course-detail]").hidden=false;document.querySelector("[data-course-loading]").hidden=true;const content=await (await fetch("/api/course-content?courseId="+encodeURIComponent(COURSE_ID))).json();document.querySelector("[data-course-lessons]").textContent=content.lessons?.length||0;document.querySelector("[data-course-modules]").innerHTML=(content.phases||[]).map(p=>"<p><b>"+p.order+". "+p.title+"</b></p>").join("")||"<p>Course content will be published soon.</p>";const enrolled=await (await fetch("/api/student/enrollments?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"})).json().catch(()=>({enrolled:false}));if(enrolled.enrolled){button.hidden=true;const link=document.querySelector("[data-learning-link]");link.hidden=false;link.href="course-learning.html?id="+encodeURIComponent(COURSE_ID);button.textContent="Enrolled ✓"}button.onclick=async()=>{button.disabled=true;try{const session=await fetch("/api/auth/me",{credentials:"same-origin"});if(!session.ok){location.href="login.html";return}const response=await fetch("/api/student/enrollments",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:JSON.stringify({courseId:COURSE_ID,courseTitle:c.title})});const data=await response.json();if(!response.ok)throw Error(data.error||"Unable to enroll");show(data.message||"Enrollment successful.","success");button.textContent="Enrolled ✓";const link=document.querySelector("[data-learning-link]");link.hidden=false;link.href="course-learning.html?id="+encodeURIComponent(COURSE_ID)}catch(error){show(error.message,"error");button.disabled=false}}}catch(error){document.querySelector("[data-course-loading]").hidden=true;const e=document.querySelector("[data-course-error]");e.hidden=false;e.textContent=error.message}});
