@@ -15,7 +15,7 @@ export default async function handler(req,res){
    const admin=req.query?.admin==="true"; if(admin){const u=await user(req);if(!u)return json(res,401,{ok:false,error:"Not authenticated"});if(u.role!=="admin")return json(res,403,{ok:false,error:"Administrator access required"})}
    const phaseQuery=admin?{courseId}:{courseId,status:"published"};
    const ps=await phases.find(phaseQuery).sort({order:1,createdAt:1}).toArray();
-   const phaseIds=ps.map(x=>x._id); const lq=admin?{courseId}:{courseId,status:"published"};
+   const phaseIds=ps.map(x=>x._id); const publishedPhaseIds=admin?ps.map(x=>x._id):ps.map(x=>x._id); const lq=admin?{courseId}:{courseId,status:"published",phaseId:{$in:publishedPhaseIds}};
    const ls=await lessons.find(lq).sort({order:1,createdAt:1}).toArray();
    return json(res,200,{ok:true,phases:ps.map(mapPhase),lessons:ls.map(mapLesson)});
   }
