@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Profile | CWU</title><link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+<a class="brand" href="index.html"><span class="brand-mark">CWU</span><span>Cyber World University</span></a>
+<nav><a href="dashboard.html">Dashboard</a><a href="my-courses.html">My Courses</a><a href="certificates.html">Certificates</a></nav>
+<a class="btn btn-small" href="dashboard.html">Back to Dashboard</a>
+</header>
+<main><section class="section">
+<p class="eyebrow">STUDENT PROFILE</p><h1>Your Profile</h1>
+<div class="dashboard-card profile-card">
+<form data-profile-form>
+<label>Full Name<input name="name" required minlength="2"></label>
+<label>Email<input name="email" type="email" readonly></label>
+<label>Role<input name="role" readonly></label>
+<button class="btn" type="submit">Save Profile</button>
+</form>
+<div class="form-message" data-profile-message hidden></div>
+</div>
+</section></main>
+<footer><p>© <span id="year"></span> Cyber World University.</p></footer>
+<script src="js/app.js"></script><script src="js/profile.js"></script>
+</body></html>
