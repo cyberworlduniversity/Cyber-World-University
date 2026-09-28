@@ -100,3 +100,12 @@ footer{padding:28px 8%;border-top:1px solid var(--line);color:var(--muted);text-
 
 /* v3.9.0 admin student management */
 .student-toolbar{margin-bottom:18px}.student-table{min-width:1050px}.student-detail-card{margin-top:28px;background:linear-gradient(145deg,#0c1929,#08111d)}.student-detail-head{display:flex;justify-content:space-between;gap:20px;align-items:start}.student-detail-head p:not(.eyebrow){color:var(--muted)}.student-detail-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:28px 0}.student-detail-grid>div{padding:16px;border:1px solid var(--line);border-radius:12px;background:#07111e}.student-detail-grid b,.student-detail-grid span{display:block}.student-detail-grid span{color:var(--muted);margin-top:5px}.student-detail-list{list-style:none;padding:0;margin:12px 0 25px;display:grid;gap:8px}.student-detail-list li{padding:12px 14px;border:1px solid var(--line);border-radius:9px;background:#07111e;color:var(--muted)}.student-detail-card h3{margin-top:30px}@media(max-width:900px){.student-detail-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.student-detail-head{flex-direction:column}.student-detail-grid{grid-template-columns:1fr}.student-detail-head .btn{width:100%}}
+
+.assessment-history-toolbar{display:flex;gap:.65rem;flex-wrap:wrap;margin:1.25rem 0}
+.assessment-history-card{overflow:hidden}
+.table-wrap{overflow-x:auto}
+.assessment-table{width:100%;border-collapse:collapse;min-width:820px}
+.assessment-table th,.assessment-table td{text-align:left;padding:.9rem;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:middle}
+.assessment-table th{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.assessment-type{font-size:.8rem;font-weight:700}
+@media(max-width:700px){.assessment-history-card{padding:.75rem}.assessment-table{min-width:760px}}
