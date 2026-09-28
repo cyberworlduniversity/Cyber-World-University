@@ -1,16 +1,10 @@
 {
   "name": "cyber-world-university",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": true,
   "description": "Cyber World University production web platform",
   "type": "module",
-  "engines": {
-    "node": "24.x"
-  },
-  "dependencies": {
-    "mongodb": "^6.20.0"
-  },
-  "scripts": {
-    "start": "node server.js"
-  }
+  "engines": {"node": "24.x"},
+  "dependencies": {"mongodb": "^6.20.0"},
+  "scripts": {"start": "node server.js"}
 }
