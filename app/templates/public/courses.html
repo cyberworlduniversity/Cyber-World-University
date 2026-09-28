@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<main><h1>Courses</h1><div class="grid">{% for c in courses %}<article class="card"><span>{{c.level}}</span><h2>{{c.title}}</h2><p>{{c.description}}</p><a href="{{url_for('public.course_detail',course_id=c.id)}}">View Course</a></article>{% endfor %}</div></main>{% endblock %}
