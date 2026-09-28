@@ -16,3 +16,6 @@ footer{padding:28px 8%;border-top:1px solid var(--line);color:var(--muted);text-
 
 
 .dashboard-email{color:var(--muted);margin-top:-20px;margin-bottom:30px}.dashboard-panels{margin-top:50px}.progress-track{height:10px;background:#07111e;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:20px 0 25px}.progress-track span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));border-radius:999px}.dashboard-logout{border:0;cursor:pointer;font:inherit}.dashboard-logout:hover{filter:brightness(1.08)}[data-dashboard-guest]{max-width:650px;margin:60px auto;text-align:center;padding:45px 25px;border:1px solid var(--line);border-radius:18px;background:#081321}[data-dashboard-guest h2{margin-top:0}@media(max-width:560px){.dashboard-email{margin-top:-10px}.dashboard-panels{margin-top:35px}}
+
+
+.my-courses-empty{max-width:650px;margin:40px auto;padding:45px 25px;text-align:center;border:1px solid var(--line);border-radius:18px;background:#081321}.my-courses-empty h2{margin-top:0}
