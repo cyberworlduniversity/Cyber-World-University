@@ -15,7 +15,7 @@ export default async function handler(request,response){
    db.collection("quiz_results").find({userId:user._id}).toArray(),
    db.collection("certificates").find({userId:user._id}).toArray()
   ]);
-  const completedLessons=progress.reduce((sum,item)=>sum+Math.max(0,Math.min(Number(item.currentLesson||0),4)),0);
+  const completedLessons=progress.reduce((sum,item)=>sum+Math.max(0,Number(item.currentLesson||0)),0);
   const averageQuizScore=quizResults.length?Math.round(quizResults.reduce((sum,item)=>sum+Number(item.percent||0),0)/quizResults.length):0;
   const current=enrollments[0]||null;
   const currentProgress=current?Number(progress.find(item=>item.courseId===current.courseId)?.progress??current.progress??0):0;
