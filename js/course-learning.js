@@ -7,6 +7,15 @@ const LESSONS=[
 const COURSE_ID="ethical-hacking-fundamentals";
 let current=1;
 
+async function checkEnrollment(){
+ const response=await fetch("/api/student/enrollments?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"});
+ if(response.status===401){location.href="login.html";return false;}
+ if(!response.ok)throw new Error("Unable to verify enrollment");
+ const data=await response.json();
+ if(!data.enrolled){document.querySelector("[data-learning-gate]").hidden=false;document.querySelector("[data-learning-content]").hidden=true;return false;}
+ return true;
+}
+
 async function loadProgress(){
  const response=await fetch("/api/student/progress?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"});
  if(!response.ok){location.href="login.html";return null;}
@@ -28,6 +37,7 @@ document.addEventListener("DOMContentLoaded",async()=>{
  const list=document.querySelector("[data-lesson-list]"),prev=document.querySelector("[data-prev]"),next=document.querySelector("[data-next]");
  if(!list)return;
  try{
+  if(!await checkEnrollment())return;
   const saved=await loadProgress();
   if(!saved)return;
   current=Math.min(Math.max(Number(saved.currentLesson)||1,1),LESSONS.length);
@@ -38,10 +48,10 @@ document.addEventListener("DOMContentLoaded",async()=>{
   });
   prev.addEventListener("click",()=>{if(current>1)selectLesson(current-1)});
   next.addEventListener("click",async()=>{
-   if(current<LESSONS.length)await selectLesson(current+1);else location.href="quiz.html";
+   if(current<LESSONS.length)await selectLesson(current+1);else location.href="quiz.html?course="+encodeURIComponent(COURSE_ID);
   });
   await selectLesson(current);
- }catch(error){console.error("Learning progress error:",error);}
+ }catch(error){console.error("Learning progress error:",error);const message=document.querySelector("[data-learning-message]");if(message){message.hidden=false;message.textContent=error.message;}}
 });
 
 async function selectLesson(number){
