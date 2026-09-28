@@ -1,2 +1,2 @@
-const version="3.1.0";
-export default function handler(request,response){response.status(200).json({ok:true,service:"Cyber World University",version,release:"Professional Vercel security and Node.js runtime",runtime:"nodejs24"});}
+const version="3.2.0";
+export default function handler(request,response){response.status(200).json({ok:true,service:"Cyber World University",version,release:"Final examination administration and assessment workflow",runtime:"nodejs24"});}
