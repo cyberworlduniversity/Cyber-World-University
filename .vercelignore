@@ -1,0 +1,8 @@
+# Keep the Vercel deployment static-only
+app/
+config.py
+requirements.txt
+schema.sql
+*.py
+__pycache__/
+*.pyc
