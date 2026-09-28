@@ -1,8 +1,8 @@
 {
   "name": "cyber-world-university",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
-  "description": "Cyber World University production web platform",
+  "description": "Cyber World University professional cybersecurity learning platform",
   "type": "module",
   "engines": {
     "node": "24.x"
@@ -11,6 +11,8 @@
     "mongodb": "^6.20.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "dev": "vercel dev",
+    "start": "vercel dev",
+    "check": "node --check api/health.js"
   }
 }
