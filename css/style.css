@@ -19,3 +19,6 @@ footer{padding:28px 8%;border-top:1px solid var(--line);color:var(--muted);text-
 
 
 .my-courses-empty{max-width:650px;margin:40px auto;padding:45px 25px;text-align:center;border:1px solid var(--line);border-radius:18px;background:#081321}.my-courses-empty h2{margin-top:0}
+
+
+.learning-layout{display:grid;grid-template-columns:minmax(240px,.65fr) minmax(0,1.35fr);gap:35px;margin-top:35px}.lesson-list{display:grid;gap:10px;align-content:start}.lesson-item{padding:16px;text-align:left;border:1px solid var(--line);border-radius:12px;background:#081321;color:var(--text);cursor:pointer;font:inherit}.lesson-item:hover,.lesson-item.active{border-color:var(--green);background:#0b1c2a}.lesson-item b{color:var(--green)}.lesson-content{padding:30px;border:1px solid var(--line);border-radius:18px;background:#081321}.lesson-actions{display:flex;justify-content:space-between;gap:12px;margin-top:28px}.lesson-actions button:disabled{opacity:.45;cursor:not-allowed}@media(max-width:900px){.learning-layout{grid-template-columns:1fr}}@media(max-width:560px){.lesson-content{padding:22px}.lesson-actions{flex-direction:column}.lesson-actions .btn{width:100%;text-align:center}}
