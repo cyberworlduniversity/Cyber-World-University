@@ -1,2 +1,4 @@
 
 .dashboard-profile-link{margin:-18px 0 28px}.profile-card{max-width:720px}.profile-card form{display:grid;gap:16px}.profile-card label{display:grid;gap:7px;color:var(--muted);font-weight:700}.profile-card input{width:100%;padding:12px 13px;border:1px solid #23415f;border-radius:9px;background:#06101b;color:var(--text);font:inherit;outline:none}.profile-card input:focus{border-color:var(--blue)}.profile-card input[readonly]{opacity:.7;cursor:not-allowed}.profile-card button{border:0;cursor:pointer;font:inherit}
+
+.course-card-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.course-card-actions .btn{flex:0 0 auto}@media(max-width:560px){.course-card-actions .btn{width:100%;text-align:center}}
