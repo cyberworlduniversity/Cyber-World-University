@@ -1,7 +1,5 @@
 import { getDatabase } from "../_lib/db.js";
 
-const COURSE_CATALOG={"ethical-hacking-fundamentals":{totalLessons:4}};
-
 const COURSE_CATALOG={
   "ethical-hacking-fundamentals":{title:"Ethical Hacking Fundamentals",totalLessons:4}
 };
@@ -30,7 +28,8 @@ export default async function handler(request,response){
       if(!course||!Number.isInteger(lessonNumber)||lessonNumber<1)
         return json(response,400,{ok:false,error:"Valid course and lesson are required"});
 
-      const completedLesson=Math.min(lessonNumber,course.totalLessons);
+      const existing=await progress.findOne({userId:user._id,courseId:id});
+      const completedLesson=Math.max(Number(existing?.currentLesson||0),Math.min(lessonNumber,course.totalLessons));
       const percent=Math.round((completedLesson/course.totalLessons)*100);
       await progress.updateOne(
         {userId:user._id,courseId:id},
