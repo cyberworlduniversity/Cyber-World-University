@@ -1,1 +1,0 @@
-{% extends "base.html" %}{% block content %}<main><h1>Welcome, {{current_user.name}}</h1><div class="grid">{% for e in enrollments %}<article class="card"><h3>{{e.course.title}}</h3><a href="{{url_for('student.learning',course_id=e.course.id)}}">Continue</a></article>{% else %}<p>No enrollments yet.</p>{% endfor %}</div></main>{% endblock %}

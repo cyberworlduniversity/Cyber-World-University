@@ -1,1 +1,0 @@
-{% extends "base.html" %}{% block content %}<main><h1>{{course.title}}</h1>{% for p in course.phases %}<section class="card"><h2>{{p.title}}</h2>{% for l in p.lessons %}<p>{{l.title}} <form method="post" action="{{url_for('student.complete_lesson',lesson_id=l.id)}}"><button class="btn">Complete</button></form></p>{% endfor %}</section>{% endfor %}</main>{% endblock %}
