@@ -1,0 +1,1 @@
+{% extends "admin/base_admin.html" %}{% block admincontent %}<h1>Students</h1>{% for s in students %}<p>{{s.name}} — {{s.email}}</p>{% endfor %}{% endblock %}
