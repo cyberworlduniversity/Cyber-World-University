@@ -84,3 +84,7 @@ footer{padding:28px 8%;border-top:1px solid var(--line);color:var(--muted);text-
 
 /* v3.4.0 dynamic homepage course cards */
 .home-course-image{padding:0!important;display:block!important;background:#07111d}.home-course-image img{width:100%;height:100%;display:block;object-fit:cover}.home-course-meta{display:flex;justify-content:space-between;gap:10px;margin:0 20px 16px;color:#71808d;font-size:12px}.home-course-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:auto 20px 20px}.home-course-bottom strong{color:#0b2135}.home-course-bottom a{margin:0;color:#127fd4;font-weight:800}.home-course-empty{min-height:300px}.home-course-empty .home-course-art{height:145px}
+
+
+/* v3.6.0 dashboard assessment history */
+.dashboard-assessments{margin-top:22px}.assessment-list{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px}.assessment-list li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #dce6ef}.assessment-list li:last-child{border-bottom:0}.assessment-list strong{display:block;color:#102033}.assessment-list small{display:block;color:#71808d;margin-top:4px}.assessment-list .result-pass,.assessment-list .result-review{padding:5px 9px;border-radius:999px;font-weight:800;font-size:12px}.assessment-list .result-pass{background:#e4f7eb;color:#16733a}.assessment-list .result-review{background:#fff1e3;color:#9a5b11}.empty-state{color:#71808d}
