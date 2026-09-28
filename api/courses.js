@@ -11,7 +11,7 @@ export default async function handler(request,response){
   if(request.method==="GET"){
    const all=request.query?.admin==="true";
    if(all){const user=await currentUser(request);if(!user)return json(response,401,{ok:false,error:"Not authenticated"});if(user.role!=="admin")return json(response,403,{ok:false,error:"Administrator access required"})}
-   const query=all?{}:{status:"published"}; if(requestedId&&ObjectId.isValid(requestedId))query._id=new ObjectId(requestedId);
+   const query=all?{}:{status:"published"}; const requestedId=String(request.query?.id||"").trim(); if(requestedId&&ObjectId.isValid(requestedId))query._id=new ObjectId(requestedId);
    const items=await courses.find(query).sort({createdAt:-1}).toArray();
    return json(response,200,{ok:true,courses:items.map(mapCourse)});
   }
