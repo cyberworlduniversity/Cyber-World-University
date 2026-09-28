@@ -1,1 +1,60 @@
-const CWU_USERS_KEY="cwu_demo_users",CWU_SESSION_KEY="cwu_demo_session";function getUsers(){try{return JSON.parse(localStorage.getItem(CWU_USERS_KEY)||"[]")}catch{return[]}}function setUsers(users){localStorage.setItem(CWU_USERS_KEY,JSON.stringify(users))}function showFormMessage(text,type="info"){let box=document.querySelector(".form-message");if(!box){box=document.createElement("div");box.className="form-message";document.querySelector(".auth-card form")?.after(box)}box.className="form-message "+type;box.textContent=text}document.addEventListener("DOMContentLoaded",()=>{const register=document.querySelector("[data-register-form]"),login=document.querySelector("[data-login-form]");if(register)register.addEventListener("submit",e=>{e.preventDefault();const data=new FormData(register),name=data.get("name").trim(),email=data.get("email").trim().toLowerCase(),password=data.get("password"),users=getUsers();if(users.some(u=>u.email===email))return showFormMessage("An account with this email already exists.","error");users.push({name,email,password});setUsers(users);showFormMessage("Registration successful. Redirecting to login...","success");setTimeout(()=>location.href="login.html",700)});if(login)login.addEventListener("submit",e=>{e.preventDefault();const data=new FormData(login),email=data.get("email").trim().toLowerCase(),password=data.get("password"),user=getUsers().find(u=>u.email===email&&u.password===password);if(!user)return showFormMessage("Demo login failed. Register first or check your details.","error");localStorage.setItem(CWU_SESSION_KEY,JSON.stringify({name:user.name,email:user.email}));location.href="dashboard.html"})});
+const CWU_SESSION_KEY="cwu_demo_session";
+
+function showFormMessage(text,type="info"){
+  let box=document.querySelector(".form-message");
+  if(!box){
+    box=document.createElement("div");
+    box.className="form-message";
+    document.querySelector(".auth-card form")?.after(box);
+  }
+  box.className="form-message "+type;
+  box.textContent=text;
+}
+
+async function postJson(url, payload){
+  const response=await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    credentials:"same-origin",
+    body:JSON.stringify(payload)
+  });
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(data.error||"Request failed");
+  return data;
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const register=document.querySelector("[data-register-form]");
+  const login=document.querySelector("[data-login-form]");
+
+  if(register) register.addEventListener("submit",async e=>{
+    e.preventDefault();
+    const data=new FormData(register);
+    const name=String(data.get("name")||"").trim();
+    const email=String(data.get("email")||"").trim().toLowerCase();
+    const password=String(data.get("password")||"");
+
+    try{
+      await postJson("/api/auth/register",{name,email,password});
+      showFormMessage("Registration successful. Redirecting to login...","success");
+      setTimeout(()=>location.href="login.html",700);
+    }catch(error){
+      showFormMessage(error.message,"error");
+    }
+  });
+
+  if(login) login.addEventListener("submit",async e=>{
+    e.preventDefault();
+    const data=new FormData(login);
+    const email=String(data.get("email")||"").trim().toLowerCase();
+    const password=String(data.get("password")||"");
+
+    try{
+      const result=await postJson("/api/auth/login",{email,password});
+      localStorage.setItem(CWU_SESSION_KEY,JSON.stringify(result.user));
+      location.href="dashboard.html";
+    }catch(error){
+      showFormMessage(error.message,"error");
+    }
+  });
+});
