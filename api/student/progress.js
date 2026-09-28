@@ -1,8 +1,10 @@
+import { ObjectId } from "mongodb";
 import { getDatabase } from "../_lib/db.js";
 function json(response,status,body){response.status(status).json(body)}
 function tokenFromCookie(request){const cookie=request.headers.cookie||"";const match=cookie.match(/(?:^|;\s*)cwu_session=([^;]+)/);return match?decodeURIComponent(match[1]):null}
 async function currentUser(request){const token=tokenFromCookie(request);if(!token)return null;const db=await getDatabase();const session=await db.collection("sessions").findOne({token});if(!session)return null;return db.collection("users").findOne({_id:session.userId})}
-async function totalLessons(db,courseId){return db.collection("lessons").countDocuments({courseId:typeof courseId==="string"?courseId:courseId,status:"published"})}
+function courseKey(value){return typeof value==="string"&&ObjectId.isValid(value)?new ObjectId(value):value}
+async function totalLessons(db,courseId){return db.collection("lessons").countDocuments({courseId:courseKey(courseId),status:"published"})}
 export default async function handler(request,response){
  if(!["GET","PATCH"].includes(request.method))return json(response,405,{ok:false,error:"Method not allowed"});
  try{const user=await currentUser(request);if(!user)return json(response,401,{ok:false,error:"Not authenticated"});const db=await getDatabase(),progress=db.collection("course_progress");
