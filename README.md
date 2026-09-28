@@ -1,51 +1,26 @@
 # Cyber World University (CWU)
 
-A Flask + MySQL cybersecurity learning platform with a responsive public website, student learning area, and protected administration panel.
+A modern, responsive cybersecurity learning platform with a public website, student learning system, protected admin panel, MongoDB persistence, and Vercel serverless APIs.
 
-## Features
-- Public CWU homepage, course catalog, course details, materials, quizzes, certificates, about and contact pages
-- Student registration, login, dashboard, enrolled courses, learning/progress and results
-- Admin dashboard, course management, videos, materials, question bank, advertisements, website content and students
-- Course → phase → lesson structure
-- Upload validation for videos and learning materials
-- Question bank designed for 100+ questions per course
-- MySQL-ready SQL schema and Flask-SQLAlchemy models
-- CSRF-aware forms and role-based access
+## Technology
 
-## Stack
-- Python 3.11+
-- Flask
-- Flask-SQLAlchemy
-- Flask-Login
-- Flask-WTF
-- MySQL / PyMySQL
-- HTML5, CSS3 and JavaScript
+- Frontend: HTML5, CSS3, vanilla JavaScript
+- Main backend language/runtime: Node.js 24.x
+- API: Vercel Node.js serverless functions
+- Database: MongoDB
+- Deployment: Vercel
+- Authentication: HTTP-only session cookie + server-side password hashing
 
-## Local setup
-1. Create the MySQL database/user with `schema.sql`.
-2. Create a virtual environment and install `requirements.txt`.
-3. Copy `.env.example` to `.env` and set a strong `SECRET_KEY` and database URL.
-4. Run `python run.py`.
-5. Open `http://127.0.0.1:5000`.
+## Vercel configuration
 
-## Repository structure
-```
-app/
-  admin.py
-  auth.py
-  models.py
-  public.py
-  student.py
-  templates/
-  static/
-config.py
-run.py
-schema.sql
-requirements.txt
-```
+Static HTML/CSS/JavaScript files are served directly and `/api/*.js` files run as Node.js serverless functions. Required environment variables are `MONGODB_URI` and optional `MONGODB_DB` (defaults to `cwu`). Never commit database credentials or API keys.
 
 ## Security
-Do not commit real credentials or secrets. Change any development administrator credentials before deployment, use HTTPS, validate uploads, use a dedicated MySQL account, and configure production cookie/security settings.
 
-## Status
-This repository contains the CWU Flask/MySQL project files and is intended as the backend-enabled version of the Cyber World University website.
+Server-side authentication and authorization, HTTP-only sessions, password hashing, admin role checks, ObjectId validation, server-side quiz/exam scoring, hidden correct answers, attempt/time limits, secure response headers, input validation, and output escaping are used throughout the platform.
+
+## Current platform
+
+Dynamic courses, phases, lessons, question bank, quizzes, final exams, student progress, certificates, admin management, and protected student APIs.
+
+Current release: **3.1.0**
