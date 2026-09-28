@@ -8,6 +8,17 @@ const QUESTIONS=[
 const COURSE_ID="ethical-hacking-fundamentals",QUIZ_ID="security-fundamentals";
 let index=0,score=0,answered=false;
 
+async function requireQuizAccess(){
+ const session=await fetch("/api/auth/me",{credentials:"same-origin"});if(!session.ok){location.href="login.html";return false;}
+ const enrollment=await fetch("/api/student/enrollments?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"});
+ if(!enrollment.ok){if(enrollment.status===401)location.href="login.html";throw new Error("Unable to verify enrollment");}
+ const e=await enrollment.json();if(!e.enrolled){showAccessMessage("Enroll in this course before taking the quiz.","course.html");return false;}
+ const progress=await fetch("/api/student/progress?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"});if(!progress.ok)throw new Error("Unable to verify course completion");
+ const p=await progress.json();if(!p.progress?.[0]||Number(p.progress[0].progress)!==100){showAccessMessage("Complete all course lessons before taking the quiz.","course-learning.html");return false;}
+ return true;
+}
+function showAccessMessage(message,href){document.querySelector("[data-quiz-area]").hidden=true;const result=document.querySelector("[data-quiz-result]");result.hidden=false;result.innerHTML="<p class=\"eyebrow\">QUIZ LOCKED</p><h2>Complete the course first</h2><p>"+message+"</p><a class=\"btn\" href=\""+href+"\">Continue →</a>";}
+
 async function requireSession(){
  const response=await fetch("/api/auth/me",{credentials:"same-origin"});
  if(!response.ok){location.href="login.html";return false;}
@@ -23,7 +34,7 @@ async function saveQuizResult(percent){
 }
 
 document.addEventListener("DOMContentLoaded",async()=>{
- if(!await requireSession())return;
+ if(!await requireQuizAccess())return;
  render();
  document.querySelector("[data-next]").addEventListener("click",nextQuestion);
 });
