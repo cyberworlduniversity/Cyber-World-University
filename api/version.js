@@ -1,11 +1,11 @@
-const version = "1.2.1";
+const version = "1.3.0";
 
 export default function handler(request, response) {
   response.status(200).json({
     ok: true,
     service: "Cyber World University",
     version,
-    release: "Production authentication foundation",
+    release: "Student profile foundation",
     runtime: "nodejs"
   });
 }
