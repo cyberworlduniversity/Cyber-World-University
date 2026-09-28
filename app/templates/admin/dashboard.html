@@ -1,0 +1,1 @@
+{% extends "admin/base_admin.html" %}{% block admincontent %}<h1>Admin Dashboard</h1><div class="grid">{% for k,v in stats.items() %}<div class="card"><b>{{v}}</b><p>{{k}}</p></div>{% endfor %}</div>{% endblock %}
