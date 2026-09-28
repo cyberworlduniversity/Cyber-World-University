@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<main><h1>Quizzes</h1>{% for q in quizzes %}<article class="card"><h3>{{q.title}}</h3><p>{{q.num_questions}} questions · {{q.time_limit}} minutes</p></article>{% else %}<p>No published quizzes yet.</p>{% endfor %}</main>{% endblock %}
