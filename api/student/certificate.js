@@ -17,7 +17,7 @@ export default async function handler(request,response){
   const eligible=progressPercent>=100&&quizPercent>=60&&(!courseId||exam!==null);
   const certificates=db.collection("certificates"); let certificate=await certificates.findOne({userId:user._id,courseId});
   if(request.method==="POST"){
-   if(!eligible)return json(response,403,{ok:false,eligible:false,error:"Complete the course and pass the quiz with at least 60% to receive a certificate."});
+   if(!eligible)return json(response,403,{ok:false,eligible:false,error:"Complete the course, pass the quiz with at least 60%, and pass the final exam to receive a certificate."});
    if(!certificate){
     const now=new Date(),prefix=String(user.name||"STUDENT").replace(/[^a-z0-9]/gi,"").toUpperCase().slice(0,6)||"STUDENT";
     const certificateId="CWU-"+now.getUTCFullYear()+"-"+prefix+"-"+Math.random().toString(36).slice(2,8).toUpperCase();
@@ -25,6 +25,6 @@ export default async function handler(request,response){
     const inserted=await certificates.insertOne(doc);certificate={_id:inserted.insertedId,...doc};
    }
   }
-  return json(response,200,{ok:true,eligible,requirements:{courseCompleted:progressPercent>=100,quizPassed:quizPercent>=60,examPassed:exam?Boolean(exam.passed):false,progressPercent,quizPercent,examPercent},certificate:certificate?{id:certificate._id.toString(),certificateId:certificate.certificateId,courseId:certificate.courseId,courseTitle:certificate.courseTitle,issuedAt:certificate.issuedAt}:null});
+  return json(response,200,{ok:true,eligible,requirements:{courseCompleted:progressPercent>=100,quizPassed:quizPercent>=60,examPassed:exam?Boolean(exam.passed):false,examRequired:Boolean(courseId),progressPercent,quizPercent,examPercent},certificate:certificate?{id:certificate._id.toString(),certificateId:certificate.certificateId,courseId:certificate.courseId,courseTitle:certificate.courseTitle,issuedAt:certificate.issuedAt}:null});
  }catch(error){console.error("Certificates API error:",error);return json(response,500,{ok:false,error:"Server configuration or database error"});}
 }
