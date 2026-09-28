@@ -1,5 +1,7 @@
 import { getDatabase } from "../_lib/db.js";
 
+const COURSE_CATALOG={"ethical-hacking-fundamentals":{totalLessons:4}};
+
 const COURSE_CATALOG={
   "ethical-hacking-fundamentals":{title:"Ethical Hacking Fundamentals",totalLessons:4}
 };
