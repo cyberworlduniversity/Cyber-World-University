@@ -1,71 +1,8 @@
-const LESSONS=[
- {title:"Security Fundamentals",topic:"Security Fundamentals",description:"Learn the core concepts of confidentiality, integrity, availability, threats, and basic defensive practices."},
- {title:"Reconnaissance Concepts",topic:"Reconnaissance Concepts",description:"Understand the purpose of reconnaissance and how security teams organize information during an authorized assessment."},
- {title:"Network Security Basics",topic:"Network Security Basics",description:"Review basic network security concepts including segmentation, access control, monitoring, and secure communication."},
- {title:"Web Application Security",topic:"Web Application Security",description:"Explore common web security concepts and defensive practices for building safer applications."}
-];
-const COURSE_ID="ethical-hacking-fundamentals";
-let current=1;
-
-async function checkEnrollment(){
- const response=await fetch("/api/student/enrollments?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"});
- if(response.status===401){location.href="login.html";return false;}
- if(!response.ok)throw new Error("Unable to verify enrollment");
- const data=await response.json();
- if(!data.enrolled){document.querySelector("[data-learning-gate]").hidden=false;document.querySelector("[data-learning-content]").hidden=true;return false;}
- return true;
-}
-
-async function loadProgress(){
- const response=await fetch("/api/student/progress?courseId="+encodeURIComponent(COURSE_ID),{credentials:"same-origin"});
- if(!response.ok){location.href="login.html";return null;}
- const data=await response.json();
- return data.progress?.[0]||{currentLesson:1,progress:0};
-}
-
-async function saveProgress(lesson){
- const response=await fetch("/api/student/progress",{
-  method:"PATCH",credentials:"same-origin",
-  headers:{"Content-Type":"application/json"},
-  body:JSON.stringify({courseId:COURSE_ID,lesson})
- });
- if(!response.ok)throw new Error("Unable to save course progress");
- return response.json();
-}
-
-document.addEventListener("DOMContentLoaded",async()=>{
- const list=document.querySelector("[data-lesson-list]"),prev=document.querySelector("[data-prev]"),next=document.querySelector("[data-next]");
- if(!list)return;
- try{
-  if(!await checkEnrollment())return;
-  const saved=await loadProgress();
-  if(!saved)return;
-  current=Math.min(Math.max(Number(saved.currentLesson)||1,1),LESSONS.length);
-  LESSONS.forEach((lesson,index)=>{
-   const item=document.createElement("button");item.type="button";item.className="lesson-item";item.dataset.index=index+1;
-   item.innerHTML="<b>Lesson "+(index+1)+"</b><br>"+lesson.title;
-   item.addEventListener("click",()=>selectLesson(index+1));list.appendChild(item);
-  });
-  prev.addEventListener("click",()=>{if(current>1)selectLesson(current-1)});
-  next.addEventListener("click",async()=>{
-   if(current<LESSONS.length)await selectLesson(current+1);else location.href="quiz.html?course="+encodeURIComponent(COURSE_ID);
-  });
-  await selectLesson(current);
- }catch(error){console.error("Learning progress error:",error);const message=document.querySelector("[data-learning-message]");if(message){message.hidden=false;message.textContent=error.message;}}
-});
-
-async function selectLesson(number){
- current=number;
- const lesson=LESSONS[current-1],progress=Math.round((current/LESSONS.length)*100);
- document.querySelector("[data-lesson-number]").textContent="LESSON "+current;
- document.querySelector("[data-lesson-title]").textContent=lesson.title;
- document.querySelector("[data-lesson-description]").textContent=lesson.description;
- document.querySelector("[data-lesson-topic]").textContent=lesson.topic;
- document.querySelector("[data-progress-text]").textContent=progress+"%";
- document.querySelector("[data-course-progress]").style.width=progress+"%";
- document.querySelector("[data-lesson-status]").textContent=current===LESSONS.length?"Ready for quiz":"In progress";
- document.querySelectorAll(".lesson-item").forEach(item=>item.classList.toggle("active",Number(item.dataset.index)===current));
- document.querySelector("[data-prev]").disabled=current===1;
- document.querySelector("[data-next]").textContent=current===LESSONS.length?"Continue to Quiz →":"Next Lesson →";
- try{await saveProgress(current);}catch(error){console.error(error);}
-}
+let current=1,LESSONS=[],COURSE_ID=new URLSearchParams(location.search).get("id")||"";
+async function api(url,opt={}){const r=await fetch(url,{credentials:"same-origin",...opt});let d={};try{d=await r.json()}catch{}if(!r.ok)throw Error(d.error||"Request failed");return d}
+async function checkEnrollment(){const d=await api("/api/student/enrollments?courseId="+encodeURIComponent(COURSE_ID));if(!d.enrolled){document.querySelector("[data-learning-gate]").hidden=false;document.querySelector("[data-learning-content]").hidden=true;return false}return true}
+async function loadProgress(){const d=await api("/api/student/progress?courseId="+encodeURIComponent(COURSE_ID));return d.progress?.[0]||{currentLesson:1,progress:0,totalLessons:LESSONS.length}}
+async function saveProgress(lesson){return api("/api/student/progress",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({courseId:COURSE_ID,lesson})})}
+function renderLessonList(list){list.innerHTML="";LESSONS.forEach((lesson,i)=>{const item=document.createElement("button");item.type="button";item.className="lesson-item";item.dataset.index=i+1;item.innerHTML="<b>Lesson "+(i+1)+"</b><br>"+lesson.title;item.onclick=()=>selectLesson(i+1);list.appendChild(item)})}
+async function selectLesson(number){current=number;const lesson=LESSONS[current-1];document.querySelector("[data-lesson-number]").textContent="LESSON "+current;document.querySelector("[data-lesson-title]").textContent=lesson.title;document.querySelector("[data-lesson-description]").textContent=lesson.description||"";document.querySelector("[data-lesson-topic]").textContent=lesson.topic||"Course lesson";const percent=Math.round((current/LESSONS.length)*100);document.querySelector("[data-progress-text]").textContent=percent+"%";document.querySelector("[data-course-progress]").style.width=percent+"%";document.querySelector("[data-lesson-status]").textContent=current===LESSONS.length?"Ready for quiz":"In progress";document.querySelectorAll(".lesson-item").forEach(x=>x.classList.toggle("active",Number(x.dataset.index)===current));document.querySelector("[data-prev]").disabled=current===1;document.querySelector("[data-next]").textContent=current===LESSONS.length?"Continue to Quiz →":"Next Lesson →";try{const saved=await saveProgress(current);const serverPercent=Number(saved.progress||percent);document.querySelector("[data-progress-text]").textContent=serverPercent+"%";document.querySelector("[data-course-progress]").style.width=serverPercent+"%"}catch(e){console.error(e)}}
+document.addEventListener("DOMContentLoaded",async()=>{const list=document.querySelector("[data-lesson-list]"),next=document.querySelector("[data-next]"),prev=document.querySelector("[data-prev]");if(!list)return;if(!COURSE_ID){document.querySelector("[data-learning-message]").hidden=false;document.querySelector("[data-learning-message]").textContent="Course ID is missing.";return}try{if(!await checkEnrollment())return;const content=await api("/api/course-content?courseId="+encodeURIComponent(COURSE_ID));LESSONS=content.lessons.map(l=>({title:l.title,topic:l.duration?l.duration+" · Lesson":"Course lesson",description:l.description,videoUrl:l.videoUrl}));if(!LESSONS.length)throw Error("No published lessons are available for this course yet.");renderLessonList(list);const saved=await loadProgress();current=Math.min(Math.max(Number(saved.currentLesson)||1,1),LESSONS.length);prev.onclick=()=>{if(current>1)selectLesson(current-1)};next.onclick=async()=>{if(current<LESSONS.length)await selectLesson(current+1);else location.href="quiz.html?course="+encodeURIComponent(COURSE_ID)};await selectLesson(current)}catch(error){console.error(error);const m=document.querySelector("[data-learning-message]");m.hidden=false;m.textContent=error.message}});
