@@ -1,15 +1,11 @@
 {
   "name": "cyber-world-university",
-  "version": "3.13.0",
+  "version": "3.13.1",
   "private": true,
   "description": "Cyber World University professional cybersecurity learning platform",
   "type": "module",
-  "engines": {
-    "node": "24.x"
-  },
-  "dependencies": {
-    "mongodb": "^6.20.0"
-  },
+  "engines": {"node": "24.x"},
+  "dependencies": {"mongodb": "^6.20.0"},
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev",
