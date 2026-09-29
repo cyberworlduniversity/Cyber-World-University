@@ -1,1 +1,0 @@
-export function mapCourse(c){return {id:c._id?.toString?.()||c.id,title:c.title,description:c.description,category:c.category,level:c.level,instructor:c.instructor,duration:c.duration,thumbnail:c.thumbnail,objectives:c.objectives||[],requirements:c.requirements||[],price:c.price??0,isFree:c.isFree!==false,status:c.status||"draft",createdAt:c.createdAt,updatedAt:c.updatedAt}};
