@@ -1,4 +1,0 @@
-import { ObjectId } from "mongodb";
-import { getDatabase } from "../_lib/db.js";
-function json(r,s,b){r.status(s).json(b)}
-export default async function handler(req,res){try{if(req.method!=="GET")return json(res,405,{ok:false,error:"Method not allowed"});const db=await getDatabase();const courseId=typeof req.query?.courseId==="string"&&ObjectId.isValid(req.query.courseId)?new ObjectId(req.query.courseId):null;const q=courseId?{courseId,status:"published"}:{status:"published"};const rows=await db.collection("quizzes").find(q).sort({createdAt:-1}).toArray();return json(res,200,{ok:true,quizzes:rows.map(x=>({id:x._id.toString(),courseId:x.courseId.toString(),title:x.title,description:x.description,questionCount:x.questionCount,timeLimitMinutes:x.timeLimitMinutes,passPercent:x.passPercent,maxAttempts:x.maxAttempts,randomize:x.randomize}))})}catch(e){console.error(e);return json(res,500,{ok:false,error:"Server configuration or database error"})}}
